@@ -1,16 +1,51 @@
-#include <stdio.h>
+#include "shell.h"
 /**
-  * main - Prints the numbers since 0 to 9
+  * main - simple shell
   *
-  * Return: Always (Success)
+  * Return: 0
   */
 int main(void)
 {
-char n;
-for (n = '0'; n <= '9'; n++)
+int status = 1;
+char *prompt = "$ ";
+char *arg, *cmd;
+char **tokens;
+int bi, wc = 0, counter = 0, errstatus = 0;
+while (status)
 {
-putchar(n);
+/* check if running from terminal or interactive mode */
+if (isatty(0))
+write(STDOUT_FILENO, prompt, 2);
+arg = read_line(errstatus);
+wc = count_words(arg, " ");
+/* blank line check */
+if (wc == 0)
+{
+free(arg);
+counter++;
+continue;
 }
-putchar('\n');
-return (0);
+tokens = parse_str(arg, " ", wc);
+cmd = _strdup(tokens[0]);
+bi = checkbi(tokens);
+/* check for built ins */
+if (bi == 0)
+{
+status = runbi(tokens);
+if (status == 1)
+errstatus = 0;
+}
+else
+{
+errstatus = executearg(tokens);
+free_dptr(tokens);
+}
+counter++;
+if (errstatus == 126 || errstatus == 127)
+{
+badcom(errstatus, counter, cmd);
+}
+free(cmd);
+}
+return (errstatus);
 }

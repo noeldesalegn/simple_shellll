@@ -1,28 +1,37 @@
-#ifndef SHELL_H
-#define SHELL_H
-#define _GNU_SOURCE
+#ifndef VRSHELL_H
+#define VRSHELL_H
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
 #include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <string.h>
 #include <errno.h>
+#include <signal.h>
+char *read_line(int n);
+int count_words(char *str, char *delim);
+char **parse_str(char *str, char *delim, int n);
+int executearg(char **arg);
+char *_strcat(char *dest, char *src);
+int _strlen(char *str);
+int _strncmp(char *s1, char *s2, int n);
+char *_strncpy(char *dest, char *src, int from, int n);
+char *_strdup(char *s);
+char *_getenv(const char *name);
+char **_paths(void);
+char *_finder(char **paths, char *cmd);
 extern char **environ;
-int _strcmp(char *st1, char *st2);
-size_t _strncmp(char *st1, char *st2, size_t n);
-int _strlen(char *ss);
-char *_strcpy(char *destt, char *srcc);
-char *_strcat(char *destt, char *srcc);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+void free_dptr(char **ptr);
 int _putchar(char c);
-char *_get_path(char **envv);
-int _values_path(char **arg, char **envv);
-char *_getline_command(void);
-void _getenv(char **envv);
-char **_get_token(char *lineptrr);
-void _exit_command(char **args, char *lineptrr, int _exit);
-int _fork_fun(char **arg, char **av, char **envv,
-char *lineptrr, int np, int c);
-char *_strtok(char *str, const char *delim);
-#endif /* SHELL_H */
+int checkbi(char **tokens);
+int runbi(char **tokens);
+char *pathfinder(char **arg);
+void badcom(int errorstatus, int count, char *cmd);
+void print_number(int n);
+int stderr_pc(char c);
+char *pstart(char *allpaths);
+char *pend(char *allpaths);
+#endif /* VRSHELL_H */
+
